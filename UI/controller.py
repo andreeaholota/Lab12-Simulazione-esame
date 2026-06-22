@@ -51,6 +51,18 @@ class Controller:
         self._view.mostra_risultati_grafo(num_nodi, num_archi, top_5, num_componenti, componente_max)
 
 
-
     def handleCammino(self, e):
-        pass
+        # Assicuriamoci che il grafo sia stato calcolato prima di cercare il cammino
+        if self._model._grafo is None or self._model._grafo.number_of_nodes() == 0:
+            self._view.mostra_errore("Crea prima il grafo!")
+            return
+
+        # Facciamo calcolare il cammino al Model
+        cammino = self._model.calcola_cammino_massimo()
+
+        if not cammino:
+            self._view.mostra_errore("Nessun cammino trovato.")
+            return
+
+        # Mandiamo il risultato alla View
+        self._view.mostra_risultato_cammino(cammino)

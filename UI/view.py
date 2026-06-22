@@ -100,3 +100,17 @@ class View(ft.UserControl):
             self.txt_result.controls.append(ft.Text(attore.name))
 
         self.update_page()
+
+    def mostra_risultato_cammino(self, cammino):
+        # Puliamo lo schermo dai risultati precedenti
+        self.txt_result.controls.clear()
+
+        self.txt_result.controls.append(
+            ft.Text(f"Cammino massimo trovato (Lunghezza: {len(cammino)} nodi):", weight="bold", color="blue")
+        )
+
+        # Stampiamo l'elenco degli attori nell'ordine del percorso
+        for nodo in cammino:
+            self.txt_result.controls.append(ft.Text(f"{nodo.name} (Età: {nodo.eta})"))
+
+        self.update_page()

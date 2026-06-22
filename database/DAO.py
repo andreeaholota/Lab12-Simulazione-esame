@@ -72,17 +72,17 @@ class DAO():
     @staticmethod
     # ARCHI
     def get_incassi_film_comuni(rating_min, rating_max):
-
-        conn=DBConnect.get_connection()
-        result=[]
+        conn = DBConnect.get_connection()
+        result = []
 
         if conn is None:
             return result
 
         try:
             cursor = conn.cursor(dictionary=True)
+            # Usiamo DISTINCT per prendere ogni film in comune una sola volta
             query = """
-                    SELECT DISTINCT rm1.name_id AS id1, rm2.name_id AS id2, m.worlwide_gross_income AS incasso
+                    SELECT DISTINCT rm1.name_id AS id1, rm2.name_id AS id2, m.id AS movie_id, m.worlwide_gross_income AS incasso
                     FROM role_mapping rm1
                     JOIN role_mapping rm2 ON rm1.movie_id = rm2.movie_id
                     JOIN movie m ON rm1.movie_id = m.id
@@ -92,7 +92,7 @@ class DAO():
                     AND rm2.category IN ('actor', 'actress')
                     AND rm1.name_id < rm2.name_id
                     """
-            cursor.execute(query,(rating_min, rating_max))
+            cursor.execute(query, (rating_min, rating_max))
 
             for row in cursor:
                 result.append((row["id1"], row["id2"], row["incasso"]))
